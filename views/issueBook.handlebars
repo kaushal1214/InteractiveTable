@@ -1,0 +1,95 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Issue a Book</h3>
+	</div>
+	<form method="post" action="/books" enctype="application/x-www-form-urlencoded">
+		<div class="panel-body form-horizontal">
+			<div class="form-group col-md-12">	
+				<label class="col-md-2 control-label"
+			 		for="name">Name:</label>
+				<div class="col-md-10">
+					<input class="form-control" type="text"  name="title">
+				</div>
+			</div>
+			<div class="form-group col-md-12">
+				<label class="col-md-2 control-label"
+			 		for="description">Description:</label>
+				<div class="col-md-10">
+					<textarea class="form-control"
+						name="des" rows="2"></textarea>
+				</div>
+			</div>
+			
+		     <script src="/socket.io/socket.io.js"></script>
+                     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+                     <script>
+                      $(function () {
+                          
+				var socket = io();
+				socket.on('RFID value', function(msg){ 
+					$('#RFID').val(msg.RFID);
+				});
+                          
+                      });
+		      </script>
+			 <div class="form-group col-md-12">
+                                <label class="col-md-2 control-label"
+                                        for="description">RFID Label:</label>
+                                <div class="col-md-10">
+                                        <input id = "RFID" class="form-control" name="RFID" type="text" />
+                                </div>
+                        </div>
+			
+
+			<div class="form-group col-md-12">
+                                <label class="col-md-2 control-label"
+                                        for="description">Author:</label>
+                                <div class="col-md-10">
+                                        <input class="form-control" name="Author" type="text" />
+                                </div>
+                        </div>
+	
+
+			<div class="form-group col-md-12">
+				<label class="col-md-2 control-label"
+			 		for="typeofbook">Book Type:</label>
+				<div class="col-md-10">
+					 <select name="books" class="form-control">
+                                                <option>Type of Book</option>
+                                                <option value="Fiction">Fiction</option>
+                                                <option value="NoFiction">No-Fiction</option>
+                                                <option value="Bio">Biography</option>
+                                        </select>
+
+				</div>
+			</div>
+		
+			<div class="form-group col-md-12">
+				<div class="col-md-12 text-right">
+					<button type="submit" id="login-btn"
+						class="btn btn-success" type="button">
+						<i class="fa fa-cloud-upload ">
+						</i> Save Book</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="panel panel-default">
+        <div class="panel-heading">
+                <h3 class=panel-title">Recently Added Books
+                </h3>
+        </div>
+
+        <div class="panel-body">
+                {{#each Books}}
+                        <div class="col-md-4 text-center" style="padding-bottom:lem;">
+				<a href="books/{{id}}">
+                                        <img src="/public/img/{{type}}.png" alt="{{name}}" id="{{type}}" style="color: #000; width: 175px; height: 175px;"
+                                                class="img-thumbnail">
+                                </a></br>{{name}}
+                        </div>
+                {{/each}}
+        </div>
+</div>
+

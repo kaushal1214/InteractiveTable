@@ -1,0 +1,47 @@
+<div class="panel panel-success">
+ <div class="panel-heading">
+  Upload an Audio File
+ </div>
+ <div class="panel-body">
+	<form method='post' action='/uploadAudio' enctype='application/x-www-form-urlencoded'>
+	 <div class="panel-body form-horizontal">
+	  <div class="form-group col-md-12">
+	   <label class="col-md-2">Name: </label>
+           <div class="col-md-10">
+	    <input class="form-control" type="text" name="name"/>
+	   </div>
+	  </div>
+	  <div class="form-group col-md-12">
+	   <label class="col-md-2">File:</label>
+	   <div class="col-md-10">
+		<input type="file" class="form-control" placeholder="File location"/>
+	   </div>
+	  </div>
+	  <div class="form-group col-md-12">
+		<div class="col-md-12 text-right">
+			<button type="submit" class="btn btn-success">Upload</button>
+		</div>
+	  </div>
+	 </div>
+	</form>
+ </div>
+</div>
+
+
+<div class="panel panel-default">
+ <div class="panel-heading">
+  Recently added Audio files
+ </div>
+ <div class="panel-body">
+	{{#each Audios}}
+	 <div class="col-md-4 text-center" style="padding-bottom:lem;">
+          <a href="audio/{{id}}">
+            <img src="/public/img/audio.png" alt="{{name}}" style="color: #000; width: 100px; height: 100px;" class="img-thumbnail">
+          </a>
+         </br>
+           {{name}}
+         </div>
+		
+	{{/each}}
+ </div>
+</div>

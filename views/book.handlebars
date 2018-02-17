@@ -1,0 +1,60 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h2 class="panel-title">
+			{{book.name}}
+		</h2>
+	</div>
+	<div class="panel-body">
+		<div class="col-md-12 text-left">
+			
+			<label><strong>Unique ID: &nbsp;</strong></label>{{book.id}}
+			<br/>
+			<label><strong>Description: &nbsp;</strong></label>{{book.description}}
+			<br/>
+			<label><strong>Book Type:&nbsp;</strong></label><a class="{{book.type}}">{{book.type}}</a>
+			<br/>
+			<label><strong>Issued to:&nbsp;</strong></label>{{book.issuedTo}}
+		</div>
+	</div>
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-md-8">
+				Added:
+				<em class="text-muted">{{ timeago book.timestamp}}</em>
+				&nbsp;
+				Last Updated:
+				<em class="text-muted">{{timeago book.timestamp}}</em>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="row">
+			<div class="col-md-8">
+				<strong class="panel-title">Details</strong>
+			</div>
+			<div class="clo-md-4 text-right">
+				<button class="btn btn-default btn-sm" id="btn-details" data-id="{{image.uniqueId}}">
+				<i class="fa fa-cog" aria-hidden="true"></i> Settings
+				</button>
+			</div>
+		</div>
+		<div class="panel-body">
+
+			<div id="device-details">
+				<form method="post" action="/books/{{book.id}}/delete">
+                                 <div class="panel-body form-horizontal">
+				  <div class="form-group col-md-12">
+                                   <button type="submit" id="login-btn"	class="btn btn-danger" type="button">
+                                       <i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
+				  </div>
+                                 </div>
+				</form>
+                        </div>
+	        </div>
+         </div>
+</div>
+				
+					
