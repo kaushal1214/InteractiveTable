@@ -1,12 +1,30 @@
 <script>
-	var Artefacts = Array[{{Artefacts}}];
-	console.log(Artefacts);
-    function myFunction(id) 
-     {
-	var x = document.getElementById(id).value;
-	console.log(x);
+	var arts=[];
+	{{#each Artefacts}}
+		arts.push("{{_id}}");
+	{{/each}}
+	var map = {
+			artefact:{}, 
+			audio:{}
+		  };
+	function songselected(id)
+	{
+		map.artefact = id;
+		map.audio = document.getElementById(id).value;
+		console.log(map);		
+		
+		socket.emit("SONG CHANGED",map);
+	}
 	
-     }
+	//To change the updated song
+	socket.on("SONG UPDATED", function(data){
+		console.log(data.SONG_DETAILS.song);
+		if(data.status==200)
+			$("#"+data.SONG_DETAILS.artefact+"_audiofile").replaceWith( "<td id='"+data.SONG_DETAILS.artefact+"_audiofile' >"+ data.SONG_DETAILS.song+"</td>");
+		
+		
+	});
+	
 </script>
 
 <div class="panel panel-primary">
@@ -15,26 +33,28 @@
 	</div>
 	<div class="panel-body">
 		<table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Artefact</th>
-      <th scope="col">Audio File</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each Artefacts}}
-    <tr>
-      <td>{{name}}</th>
-      <td>
-	<select id="{{id}}" onchange="myFunction({{id}})" >
-	{{#each Audios}}
-	  <option value="{{name}}">{{name}}.mp3</option>
-	{{/each}}
-	</select>
-      </td>
-    </tr>
-   {{/each}}
-  </tbody>
-</table> 
+		 <thead>
+		  <tr>
+		   <th scope="col">Artefact</th>
+		   <th scope="col">Audio File</th>
+		   <th scope="col">Playing</th>
+		  </tr>
+		 </thead>
+		 <tbody>
+		  {{#each Artefacts}}
+		   <tr>
+		    <td>{{name}}</td>
+		    <td>
+		     <select id="{{_id}}" name="{{_id}}" onchange="songselected('{{_id}}')">
+		      {{#each Audios}}
+		       <option value="{{_id}}">{{name}}.mp3</option>
+		      {{/each}}
+		     </select>
+		    </td>
+		    <td id="{{_id}}_audiofile">{{audiofile}}</td>
+		   </tr>
+		  {{/each}}
+		 </tbody>
+		</table> 
 	</div>
 </div>

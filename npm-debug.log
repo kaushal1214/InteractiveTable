@@ -1,7 +1,7 @@
 0 info it worked if it ends with ok
 1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'start' ]
 2 info using npm@3.10.10
-3 info using node@v6.12.3
+3 info using node@v6.13.0
 4 verbose run-script [ 'prestart', 'start', 'poststart' ]
 5 info lifecycle mage@1.0.0~prestart: mage@1.0.0
 6 silly lifecycle mage@1.0.0~prestart: no script for prestart, continuing
@@ -26,7 +26,7 @@
 16 verbose cwd /home/kaushal/workspace/InteractiveTable
 17 error Linux 4.4.0-112-generic
 18 error argv "/usr/bin/node" "/usr/bin/npm" "start"
-19 error node v6.12.3
+19 error node v6.13.0
 20 error npm  v3.10.10
 21 error code ELIFECYCLE
 22 error mage@1.0.0 start: `node server.js`

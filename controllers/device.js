@@ -5,7 +5,7 @@ module.exports ={
 		var viewModel ={
 			artefact:{}
 		}
-		Models.Artefacts.findOne({id: {$regex: req.params.art_id}},function(err,docs){
+		Models.Artefacts.findOne({_id: {$regex: req.params.art_id}},function(err,docs){
 			if(err)
 			{
 				console.log(err);
@@ -24,7 +24,7 @@ module.exports ={
                 var viewModel ={
                         audio:{}
                 }
-                Models.Audios.findOne({id: {$regex: req.params.audio_id}},function(err,docs){
+                Models.Audios.findOne({_id: {$regex: req.params.audio_id}},function(err,docs){
                         if(err)
                         {
                                 console.log(err);
@@ -60,6 +60,10 @@ module.exports ={
 			}
 		});
 	},
+
+	/*-----------------------------------
+	 * POST request to Save audio file
+	 *----------------------------------*/
 	create_audio: function(req,res){
 		//TODO upload the file on the Server.
 		 var saveDevice = function(){
@@ -69,7 +73,7 @@ module.exports ={
                         {
                                 devUrl += possible.charAt(Math.floor(Math.random()*possible.length));
                         }
-                        Models.Audios.find({id:devUrl},function(err,docs){
+                        Models.Audios.find({_id:devUrl},function(err,docs){
                                 if(docs.length > 0)
                                 {
                                         saveDevice();
@@ -78,7 +82,7 @@ module.exports ={
                                 {
                                         var newDev = new Models.Audios({
                                                 name: req.body.name,
-                                                id: devUrl
+                                                _id: devUrl
                                         });
                                         newDev.save(function(err,dev){
                                                 res.redirect('/addaudio');
@@ -88,10 +92,11 @@ module.exports ={
 
                 };
                 saveDevice();
-
-
-
 	},
+
+	/*-----------------------------------
+	 * POST request to save an artefact
+   	 *----------------------------------*/
 	create: function(req, res){
 		var saveDevice = function(){
 			var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -100,7 +105,7 @@ module.exports ={
 			{
 				devUrl += possible.charAt(Math.floor(Math.random()*possible.length));
 			}
-			Models.Artefacts.find({id:devUrl},function(err,docs){
+			Models.Artefacts.find({_id:devUrl},function(err,docs){
 				if(docs.length > 0)
 				{
 					saveDevice();
@@ -111,8 +116,9 @@ module.exports ={
 						name: req.body.name,
 						description: req.body.des,
 						audiofile:"Not Associated",
+						audiofileid:"Not Associated",
 						RFID:req.body.RFID,
-						id: devUrl
+						_id: devUrl
 					});
 					newDev.save(function(err,dev){
 						res.redirect('/addArtefact');
@@ -122,6 +128,34 @@ module.exports ={
 
 		};
 		saveDevice();
+
+	},
+
+	/*-----------------------------------
+	 * POST request to save the playlist
+	 *-----------------------------------*/
+	savePlaylist: function(req,res){
+
+		//To store JSON data request
+		var data =  req.body;
+
+		for(var key in data)
+		{
+		        Models.Audios.findOne({_id:data[key]},function(err,doc){
+
+				if(err)
+					console.log( err.toString());
+				else if(doc)
+				{
+			            Models.Artefacts.update({_id:key}, { $set: { audiofileid: data[key], audiofile:doc.name}}, function(err,doc){
+					if(!err)
+						console.log("File updated");
+				    });
+				}
+			});
+		        console.log(key);
+		}
+		        res.redirect('/');
 
 	},
 	/*----------------------------------------
@@ -147,7 +181,7 @@ module.exports ={
 	},
 
 	delete: function(req,res){
-		Models.Artefacts.remove({id:{$regex: req.params.device_id}},function(err,docs){
+		Models.Artefacts.remove({_id:{$regex: req.params.device_id}},function(err,docs){
 			if(err) console.log(err);
 			console.log("Device has been removed.");
 		});

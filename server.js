@@ -8,6 +8,8 @@ var app = require('express')();
 var http = require('http').Server(app);
 var config = require('./server/configure');
 var mongoose = require('mongoose');
+var Models = require('./models');
+
 var io = require('socket.io')(http);
 var mqtt = require('mqtt');
 var mqtt_client  = mqtt.connect('mqtt:/\/127.0.0.1:1883');
@@ -75,6 +77,26 @@ port.on('data', function(data){
 //Socket.io callback
 io.on('connection', function(socket){
 	console.log('A client is connected');
+
+	socket.on("SONG CHANGED",function(data){
+		Models.Audios.findOne({_id:data.audio},function(err,doc)
+		{
+			if(!err)
+			{
+				var song_name=doc.name;
+				Models.Artefacts.update({_id: data.artefact},{$set:{audiofileid:data.audio, audiofile:song_name}},function(err,doc){
+					if(!err)
+					{
+						var SONG_DETAILS={artefact:data.artefact, song: song_name};
+						socket.emit("SONG UPDATED",{status:200,SONG_DETAILS });
+						console.log("Updated");
+					}
+					else
+						socket.emit("SONG UPATED",{status:500});
+				});
+			}
+		});
+	});
 
 });
 

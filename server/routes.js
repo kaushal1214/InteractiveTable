@@ -24,5 +24,10 @@ module.exports = function(app){
 	 * POST request to Delete a Artefact/Audio file
 	 *----------------------------------------------*/
 	router.post('/books/:device_id/delete',image.delete);
+
+	/*-----------------------------
+	 * POST to save the playlist
+	 *---------------------------*/
+	router.post('/savePlaylist',image.savePlaylist);
 	app.use(router);
 };

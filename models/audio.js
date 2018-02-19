@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
 
 var DeviceSchema =new Schema({
 	name:		{type: String},
-	id:		{type: String},
+	_id:		{type: String},
 	timestamp:	{type: Date ,'default': Date.now}
 });1
 

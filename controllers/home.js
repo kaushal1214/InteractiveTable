@@ -5,13 +5,13 @@ module.exports = {
 		var viewModel = {
 			Artefacts: [{Audios: {}}]
 		};
-		Models.Artefacts.find({},{fields: { _id: 0 }},function(err,docs)
+		Models.Artefacts.find({},function(err,docs)
 		{
 			if(err)
 				console.log(err);
 			else if(docs)
 			{	viewModel.Artefacts= docs;
-				Models.Audios.find({},{fields: {_id: 0}},function(err,data)
+				Models.Audios.find({},function(err,data)
 				{
 					if(err)
 						console.log(err);

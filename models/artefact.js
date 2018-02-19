@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
 var DeviceSchema =new Schema({
 	name:		{type: String},
 	description: 	{type: String},
-	id:		{type: String},
+	_id:		{type: String},
 	audiofile:	{type: String},
 	RFID:		{type: String},
 	timestamp:	{type: Date ,'default': Date.now}
