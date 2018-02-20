@@ -9,11 +9,18 @@
 		  };
 	function songselected(id)
 	{
-		map.artefact = id;
-		map.audio = document.getElementById(id).value;
-		console.log(map);		
+		var optionValue = document.getElementById(id).value;
+		console.log(optionValue);
 		
-		socket.emit("SONG CHANGED",map);
+		if(optionValue != 'select')
+		{
+			map.artefact = id;
+			map.audio = optionValue;
+			console.log(map);		
+		
+			socket.emit("SONG CHANGED",map);	
+		}
+		
 	}
 	
 	//To change the updated song
@@ -46,6 +53,7 @@
 		    <td>{{name}}</td>
 		    <td>
 		     <select id="{{_id}}" name="{{_id}}" onchange="songselected('{{_id}}')">
+		      <option selected="selected" value="select">---Select---</option>
 		      {{#each Audios}}
 		       <option value="{{_id}}">{{name}}.mp3</option>
 		      {{/each}}
