@@ -4,7 +4,6 @@
 *---------------------------------------------------*/
 
 var app = require('express')();
-//var app= express();
 var http = require('http').Server(app);
 var config = require('./server/configure');
 var mongoose = require('mongoose');
@@ -33,7 +32,6 @@ mqtt_client.on('message', function (topic, message) {
 /*-----------------------------------
  *Purpose: To Read the serail data
  *------------------------------------*/
-
 const Port = '/dev/ttyUSB0';
 const SerialPort = require('serialport');
 
@@ -48,6 +46,9 @@ port.pipe(parser);
 var id = [];
 var len;
 var temp;
+
+//To Check the Audio start event
+var START_SONG = false;
 
 //Flowing mode
 port.on('data', function(data){
@@ -86,29 +87,34 @@ port.on('data', function(data){
  *---------------------------*/
 function RunningtheSong(tag)
 {
-
-	console.log(tag);
-	Models.Artefacts.findOne({RFID:tag},function(err,doc)
+	if(START_SONG)
 	{
-		var filePath = path.resolve('./public/upload/audio/');
-		var fileName = doc.audiofileid+'.mp3';
-		var process = cmd.get('aplay '+filePath+'/'+fileName, function(err,data,stderr){
-		if(!err)
-			console.log("running the song: " + data);
-		else
-			console.log("ERROR: \n"+ err);
+		console.log(tag);
+		Models.Artefacts.findOne({RFID:tag},function(err,doc)
+		{
+			var filePath = path.resolve('./public/upload/audio/');
+			var fileName = doc.audiofileid+'.mp3';
+			var process = cmd.get('aplay '+filePath+'/'+fileName, function(err,data,stderr){
+			if(!err)
+				console.log("running the song: " + data);
+			else
+				console.log("ERROR: \n"+ err);
+			});
 		});
-	});
-	console.log(process.pid);
+		console.log(process.pid);
+	}
+	else
+		console.log("Song can not be started. Go to the Starter Page");
 }
 
 
 //Socket.io callback
 io.on('connection', function(socket){
+
 	console.log('A client is connected');
 
 	socket.on("SONG CHANGED",function(data){
-		console.log("Song chagend");
+		console.log("Song changed");
 		Models.Audios.findOne({_id:data.audio},function(err,doc)
 		{
 			if(!err)
@@ -128,7 +134,15 @@ io.on('connection', function(socket){
 			}
 		});
 	});
+	socket.on("SONG_START", function(data){
+		START_SONG = true;
+		console.log("Song start fired!");
+	});
 
+	socket.on("SONG_STOP", function(data){
+		START_SONG = false;
+		console.log("Song stop fired!");
+	});
 });
 
 app.set('port',process.env.PORT || 3300);

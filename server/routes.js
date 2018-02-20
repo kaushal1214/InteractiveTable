@@ -9,7 +9,7 @@ module.exports = function(app){
 	router.get('/audio/:audio_id',image.show_audio);
 	router.get('/addaudio',image.audio);
 	router.get('/addartefact',image.artefact);
-
+	router.get('/visualizer',image.visualizer);
 	/*-------------------------------------
 	 * POST request to upload an artefact
 	 *------------------------------------*/
@@ -25,9 +25,5 @@ module.exports = function(app){
 	 *----------------------------------------------*/
 	router.post('/books/:device_id/delete',image.delete);
 
-	/*-----------------------------
-	 * POST to save the playlist
-	 *---------------------------*/
-	router.post('/savePlaylist',image.savePlaylist);
 	app.use(router);
 };

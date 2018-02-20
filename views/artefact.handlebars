@@ -3,6 +3,10 @@
 		console.log(data);
 		$('#RFID').val(data.RFID);
 	});
+	
+	//Stop the Audio start up
+	socket.emit("SONG_STOP",{data:4});
+
 </script>
 <div class="panel panel-danger">
  <div class="panel-heading">

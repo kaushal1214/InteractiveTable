@@ -163,28 +163,8 @@ module.exports ={
 	/*-----------------------------------
 	 * POST request to save the playlist
 	 *-----------------------------------*/
-	savePlaylist: function(req,res){
-
-		//To store JSON data request
-		var data =  req.body;
-
-		for(var key in data)
-		{
-		        Models.Audios.findOne({_id:data[key]},function(err,doc){
-
-				if(err)
-					console.log( err.toString());
-				else if(doc)
-				{
-			            Models.Artefacts.update({_id:key}, { $set: { audiofileid: data[key], audiofile:doc.name}}, function(err,doc){
-					if(!err)
-						console.log("File updated");
-				    });
-				}
-			});
-		        console.log(key);
-		}
-		        res.redirect('/');
+	visualizer: function(req,res){
+		        res.render('visualizer');
 
 	},
 	/*----------------------------------------
