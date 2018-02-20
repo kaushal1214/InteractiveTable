@@ -10,8 +10,13 @@ var config = require('./server/configure');
 var mongoose = require('mongoose');
 var Models = require('./models');
 
+
+//To run the commands
+var cmd=require('node-cmd');
+
 var io = require('socket.io')(http);
 var mqtt = require('mqtt');
+var path = require('path');
 var mqtt_client  = mqtt.connect('mqtt:/\/127.0.0.1:1883');
 
 mqtt_client.on('connect', function () {
@@ -68,10 +73,34 @@ port.on('data', function(data){
                 var RFIDTag = id.join("");
                 io.emit('RFID value',{RFID:RFIDTag});
                 id =[];
+
+		//To run the song based on the RFID tag value
+		RunningtheSong(RFIDTag);
         }
 
 });
 
+
+/*-----------------------------
+ * To run the song RFID tag
+ *---------------------------*/
+function RunningtheSong(tag)
+{
+
+	console.log(tag);
+	Models.Artefacts.findOne({RFID:tag},function(err,doc)
+	{
+		var filePath = path.resolve('./public/upload/audio/');
+		var fileName = doc.audiofileid+'.mp3';
+		var process = cmd.get('aplay '+filePath+'/'+fileName, function(err,data,stderr){
+		if(!err)
+			console.log("running the song: " + data);
+		else
+			console.log("ERROR: \n"+ err);
+		});
+	});
+	console.log(process.pid);
+}
 
 
 //Socket.io callback
@@ -79,6 +108,7 @@ io.on('connection', function(socket){
 	console.log('A client is connected');
 
 	socket.on("SONG CHANGED",function(data){
+		console.log("Song chagend");
 		Models.Audios.findOne({_id:data.audio},function(err,doc)
 		{
 			if(!err)
@@ -90,6 +120,7 @@ io.on('connection', function(socket){
 						var SONG_DETAILS={artefact:data.artefact, song: song_name};
 						socket.emit("SONG UPDATED",{status:200,SONG_DETAILS });
 						console.log("Updated");
+						RunningtheSong("1234567890");
 					}
 					else
 						socket.emit("SONG UPATED",{status:500});

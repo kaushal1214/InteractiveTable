@@ -6,6 +6,7 @@ var DeviceSchema =new Schema({
 	description: 	{type: String},
 	_id:		{type: String},
 	audiofile:	{type: String},
+	audiofileid:	{type: String},
 	RFID:		{type: String},
 	timestamp:	{type: Date ,'default': Date.now}
 });1

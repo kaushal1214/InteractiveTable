@@ -1,4 +1,6 @@
 var Models = require('../models');
+var fs = require('fs'),
+    path = require('path');
 
 module.exports ={
 	index: function(req,res){
@@ -65,6 +67,7 @@ module.exports ={
 	 * POST request to Save audio file
 	 *----------------------------------*/
 	create_audio: function(req,res){
+
 		//TODO upload the file on the Server.
 		 var saveDevice = function(){
                         var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -84,9 +87,35 @@ module.exports ={
                                                 name: req.body.name,
                                                 _id: devUrl
                                         });
-                                        newDev.save(function(err,dev){
-                                                res.redirect('/addaudio');
-                                        });
+
+					var tempPath = req.file.path,
+						ext = path.extname(req.file.originalname).toLowerCase(),
+						targetPath = path.resolve('./public/upload/audio/' + devUrl + ext);
+
+					if(ext==='.mp3')
+					{
+						fs.rename(tempPath, targetPath, function(err){
+						if(!err)
+						{
+		                                        newDev.save(function(err,dev){
+								if(!err)
+	                		                                res.redirect('/addaudio');
+								else
+									console.log(err);
+                                		        });
+						}
+						else
+							console.log(err);
+						});
+					}
+					else
+					{
+						fs.unlink(tempPath, function(err){
+							if(!err)
+							res.json(500,{error: 'Only mp3 files are allowed.'});
+
+						});
+					}
                                 }
                         });
 
