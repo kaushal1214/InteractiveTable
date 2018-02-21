@@ -8,7 +8,7 @@ var http = require('http').Server(app);
 var config = require('./server/configure');
 var mongoose = require('mongoose');
 var Models = require('./models');
-
+var terminate = require('terminate');
 
 //To run the commands
 var cmd=require('node-cmd');
@@ -50,6 +50,9 @@ var temp;
 //To Check the Audio start event
 var START_SONG = false;
 
+//To store the Process PID of the song played
+var Process = null;
+
 //Flowing mode
 port.on('data', function(data){
 
@@ -87,6 +90,14 @@ port.on('data', function(data){
  *---------------------------*/
 function RunningtheSong(tag)
 {
+	if(Process)
+	{
+		terminate(Process.pid+1,function(err){
+		if(!err)
+			console.log("Killed");
+		});
+	}
+
 	if(START_SONG)
 	{
 		console.log(tag);
@@ -94,14 +105,14 @@ function RunningtheSong(tag)
 		{
 			var filePath = path.resolve('./public/upload/audio/');
 			var fileName = doc.audiofileid+'.mp3';
-			var process = cmd.get('aplay '+filePath+'/'+fileName, function(err,data,stderr){
+			Process = cmd.get('nvlc '+filePath+'/'+fileName, function(err,data,stderr){
 			if(!err)
 				console.log("running the song: " + data);
 			else
 				console.log("ERROR: \n"+ err);
 			});
+			console.log("Process PID: "+Process.pid);
 		});
-		console.log(process.pid);
 	}
 	else
 		console.log("Song can not be started. Go to the Starter Page");
@@ -126,7 +137,6 @@ io.on('connection', function(socket){
 						var SONG_DETAILS={artefact:data.artefact, song: song_name};
 						socket.emit("SONG UPDATED",{status:200,SONG_DETAILS });
 						console.log("Updated");
-						RunningtheSong("1234567890");
 					}
 					else
 						socket.emit("SONG UPATED",{status:500});
